@@ -51,6 +51,9 @@ public class SelecionarPokemonsBatalha {
                 break;
         }
 
+        ash.adicionarPokemon(p1, 0);
+        gegel.adicionarPokemon(p2, 0);
+
         if (p1 != null && p2 != null) {
             BatalhaPokemon.batalhar(p1, p2);
         } else {

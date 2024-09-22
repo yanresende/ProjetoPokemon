@@ -1,14 +1,17 @@
 public class Treinador {
+
     private String nome;
     private int nivel;
     private String[] insignias = new String[10];
     private String cidade;
+    private Pokemon[] listaPokemons;
 
     public Treinador() {
         this.setCidade("Cidade Desconhecida");
         this.setNivel(1);
         this.setNome("Treinador Generico");
         this.setInsignias(0, "");
+        this.listaPokemons = new Pokemon[6];
     }
 
     public Treinador(String cidade, String nome, String insignia, int nivel, int posicao) {
@@ -16,12 +19,21 @@ public class Treinador {
         this.setNivel(nivel);
         this.setNome(nome);
         this.setInsignias(posicao, insignia);
+        this.listaPokemons = new Pokemon[6];
     }
 
     @Override
     public String toString() {
 
         return "Nome: " + nome + " nivel: " + nivel + " cidade: " + cidade + " insignias: " + insignias[0];
+    }
+
+    public void adicionarPokemon(Pokemon pokemon, int posicao) {
+        if (posicao >= 0 && posicao < listaPokemons.length) {
+            this.listaPokemons[posicao] = pokemon;
+        } else {
+            System.out.println("Posição inválida!");
+        }
     }
 
     public String getNome() {
