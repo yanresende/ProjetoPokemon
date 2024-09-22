@@ -55,7 +55,7 @@ public class SelecionarPokemonsBatalha {
         gegel.adicionarPokemon(p2, 0);
 
         if (p1 != null && p2 != null) {
-            BatalhaPokemon.batalhar(p1, p2);
+            BatalhaPokemon.batalhar(ash, gegel);
         } else {
             System.out.println("Erro ao selecionar os Pokémons para a batalha.");
         }

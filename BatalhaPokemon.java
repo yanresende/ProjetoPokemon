@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class BatalhaPokemon {
 
-    public static void batalhar(Pokemon p1, Pokemon p2) {
+    public static void batalhar(Treinador p1, Treinador p2) {
 
         Scanner scanner = new Scanner(System.in);
         Boolean continuarBatalha = true;
@@ -14,22 +14,23 @@ public class BatalhaPokemon {
 
         while (continuarBatalha) {
 
-            AtaqueJogador(p1, p2, codigoAtaque, continuarBatalha, scanner);
+            AtaqueJogador(p1.getListaPokemons(0), p2.getListaPokemons(0), codigoAtaque, continuarBatalha, scanner);
 
-            if (p2.getVida() <= 0) {
+            if (p2.getListaPokemons(0).getVida() <= 0) {
 
-                continuarBatalha = PokemonDerrotado(continuarBatalha, p1, p2);
+                continuarBatalha = PokemonDerrotado(continuarBatalha, p1.getListaPokemons(0), p2.getListaPokemons(0));
 
             } else {
-                System.out.println("Vida de " + p2.getNome() + ": " + p2.getVida());
+                System.out.println("Vida de " + p2.getNome() + ": " + p2.getListaPokemons(0).getVida());
                 System.out.println("----------------------------------------------------------");
 
-                OponenteAtaca(p1, p2, codigoAtaque, continuarBatalha);
+                OponenteAtaca(p1.getListaPokemons(0), p2.getListaPokemons(0), codigoAtaque, continuarBatalha);
 
-                if (p1.getVida() <= 0) {
-                    continuarBatalha = PokemonDerrotado(continuarBatalha, p1, p2);
+                if (p1.getListaPokemons(0).getVida() <= 0) {
+                    continuarBatalha = PokemonDerrotado(continuarBatalha, p1.getListaPokemons(0), p2
+                            .getListaPokemons(0));
                 } else {
-                    System.out.println("Vida de " + p1.getNome() + ": " + p1.getVida());
+                    System.out.println("Vida de " + p1.getNome() + ": " + p1.getListaPokemons(0).getVida());
                     System.out.println("----------------------------------------------------------");
                 }
             }

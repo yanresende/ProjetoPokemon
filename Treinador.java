@@ -28,6 +28,20 @@ public class Treinador {
         return "Nome: " + nome + " nivel: " + nivel + " cidade: " + cidade + " insignias: " + insignias[0];
     }
 
+    public Pokemon getListaPokemons(int posicao) {
+        if (posicao >= 0 && posicao < listaPokemons.length) {
+            return listaPokemons[posicao];
+        } else {
+            System.out.println("Posição inválida!");
+        }
+        return null;
+
+    }
+
+    public void setListaPokemons(Pokemon[] listaPokemons) {
+        this.listaPokemons = listaPokemons;
+    }
+
     public void adicionarPokemon(Pokemon pokemon, int posicao) {
         if (posicao >= 0 && posicao < listaPokemons.length) {
             this.listaPokemons[posicao] = pokemon;
