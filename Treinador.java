@@ -11,7 +11,7 @@ public class Treinador {
         this.setNivel(1);
         this.setNome("Treinador Generico");
         this.setInsignias(0, "");
-        this.listaPokemons = new Pokemon[6];
+        this.listaPokemons = new Pokemon[2];
     }
 
     public Treinador(String cidade, String nome, String insignia, int nivel, int posicao) {
@@ -19,7 +19,7 @@ public class Treinador {
         this.setNivel(nivel);
         this.setNome(nome);
         this.setInsignias(posicao, insignia);
-        this.listaPokemons = new Pokemon[6];
+        this.listaPokemons = new Pokemon[2];
     }
 
     @Override

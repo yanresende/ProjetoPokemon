@@ -9,13 +9,13 @@ abstract class Pokemon {
     private int vida;
 
     public Pokemon() {
-        this.setNome("Pokemon");
+        this.setNome("");
         this.setVida(0);
         this.setNivel(0);
-        this.setTipo("Nenhum");
-        this.setTreinador("Treinador Desconhecido");
-        this.setFraquesa("Nenhum");
-        this.setVantagem("Nenhum");
+        this.setTipo("");
+        this.setTreinador("");
+        this.setFraquesa("");
+        this.setVantagem("");
     }
 
     public int Ataque(int i, boolean v) {
