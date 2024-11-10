@@ -3,33 +3,20 @@ abstract class Pokemon {
     private String nome;
     private String tipo;
     private String treinador;
-    private String fraquesa;
     private String vantagem;
     private int nivel;
     private int vida;
 
     public Pokemon() {
-        this.setNome("");
-        this.setVida(0);
-        this.setNivel(0);
-        this.setTipo("");
-        this.setTreinador("");
-        this.setFraquesa("");
-        this.setVantagem("");
+        this.nome = "";
+        this.tipo = "";
+        this.treinador = "";
+        this.vantagem = "";
+        this.nivel = 1;
+        this.vida = 50;
     }
 
-    public int Ataque(int i, boolean v) {
-        return i;
-
-    }
-
-    public String getFraquesa() {
-        return fraquesa;
-    }
-
-    public void setFraquesa(String fraquesa) {
-        this.fraquesa = fraquesa;
-    }
+    public abstract int ataque(int tipoAtaque, boolean temVantagem);
 
     public String getVantagem() {
         return vantagem;

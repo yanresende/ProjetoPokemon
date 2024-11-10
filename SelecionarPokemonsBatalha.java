@@ -6,9 +6,11 @@ public class SelecionarPokemonsBatalha {
         String pokemon1, pokemon2;
         Scanner scanner = new Scanner(System.in);
 
+        // Criando os treinadores
         Treinador ash = new Treinador("Palete", "Ash", "Joto", 20, 0);
         Treinador gegel = new Treinador("SilverStone", "Gegel", "Cairo", 20, 0);
 
+        // Criando os Pokémons
         Pikachu pikachu = new Pikachu(50, 1, ash.getNome());
         Blastoise blastoise = new Blastoise(50, 1, ash.getNome());
         Charizard charizard = new Charizard(50, 1, gegel.getNome());
@@ -16,52 +18,52 @@ public class SelecionarPokemonsBatalha {
         Pokemon p1 = null;
         Pokemon p2 = null;
 
-        System.out.println("Escolha 2 pokemons para batalhar (pikachu, charizard, blastoise):");
+        // Seleção para o treinador Ash
+        do {
+            System.out.println(ash.getNome() + ", escolha o seu Pokémon (pikachu, charizard, blastoise):");
+            pokemon1 = scanner.nextLine().toLowerCase();
+            p1 = selecionarPokemon(pokemon1, pikachu, charizard, blastoise);
+            if (p1 == null) {
+                System.out.println("Pokémon inválido. Tente novamente.");
+            }
+        } while (p1 == null); // Repete até selecionar um Pokémon válido
 
-        pokemon1 = scanner.nextLine().toLowerCase();
-        pokemon2 = scanner.nextLine().toLowerCase();
+        // Seleção para o treinador Gegel
+        do {
+            System.out.println(gegel.getNome() + ", escolha o seu Pokémon (pikachu, charizard, blastoise):");
+            pokemon2 = scanner.nextLine().toLowerCase();
+            p2 = selecionarPokemon(pokemon2, pikachu, charizard, blastoise);
+            if (p2 == null) {
+                System.out.println("Pokémon inválido. Tente novamente.");
+            }
+        } while (p2 == null); // Repete até selecionar um Pokémon válido
 
-        switch (pokemon1) {
+        // Adicionar os pokémons aos treinadores
+        ash.adicionarPokemon(p1, 0); // Adiciona o primeiro Pokémon ao Ash
+        gegel.adicionarPokemon(p2, 0); // Adiciona o segundo Pokémon ao Gegel
+
+        // O Ash também tem um Blastoise, e o Gegel um Charizard como segundo Pokémon
+        ash.adicionarPokemon(blastoise, 1);
+        gegel.adicionarPokemon(charizard, 1);
+
+        // Iniciar a batalha
+        BatalhaPokemon.batalhar(ash, gegel);
+
+        scanner.close(); // Fechar o scanner
+    }
+
+    // Função para selecionar o Pokémon baseado no nome
+    public static Pokemon selecionarPokemon(String nomePokemon, Pikachu pikachu, Charizard charizard,
+            Blastoise blastoise) {
+        switch (nomePokemon) {
             case "pikachu":
-                p1 = pikachu;
-                break;
+                return pikachu;
             case "charizard":
-                p1 = charizard;
-                break;
+                return charizard;
             case "blastoise":
-                p1 = blastoise;
-                break;
+                return blastoise;
             default:
-                System.out.println("Pokémon 1 inválido");
-                break;
+                return null; // Retorna null se o nome do Pokémon for inválido
         }
-
-        switch (pokemon2) {
-            case "pikachu":
-                p2 = pikachu;
-                break;
-            case "charizard":
-                p2 = charizard;
-                break;
-            case "blastoise":
-                p2 = blastoise;
-                break;
-            default:
-                System.out.println("Pokémon 2 inválido");
-                break;
-        }
-
-        ash.adicionarPokemon(p1, 0);
-        gegel.adicionarPokemon(p2, 0);
-        p2 = blastoise;
-        gegel.adicionarPokemon(p2, 1);
-
-        if (p1 != null && p2 != null) {
-            BatalhaPokemon.batalhar(ash, gegel);
-        } else {
-            System.out.println("Erro ao selecionar os Pokémons para a batalha.");
-        }
-
-        scanner.close();
     }
 }

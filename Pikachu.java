@@ -1,73 +1,46 @@
 public class Pikachu extends Pokemon {
 
     public Pikachu() {
+        super();
         this.setNome("Pikachu");
         this.setVida(20);
         this.setNivel(1);
         this.setTipo("Elétrico");
-        this.setTreinador("Treinador Desconhecido");
-        this.setFraquesa("Terra");
         this.setVantagem("Agua-Voador");
     }
 
     public Pikachu(int vida, int nivel, String treinador) {
-        this.setNome("Pikachu");
+        this();
         this.setVida(vida);
         this.setNivel(nivel);
-        this.setTipo("Elétrico");
         this.setTreinador(treinador);
-        this.setFraquesa("Terra");
-        this.setVantagem("Agua-Voador");
 
     }
 
     @Override
-    public int Ataque(int i, boolean v) {
-        if (i == 1) {
-            System.out.println("Pikachu usou Choque do trovão");
-            if (v == true) {
-                i = 1 * 2;
-                System.out.println("- " + i + " de vida");
-            } else {
-                i = 1;
-                System.out.println("- " + i + " de vida");
-            }
-            return i;
-
-        } else if (i == 2) {
-            System.out.println("Pikachu usou Ataque rapido");
-            if (v == true) {
-                i = 3 * 2;
-                System.out.println("- " + i + " de vida");
-            } else {
-                i = 3;
-                System.out.println("- " + i + " de vida");
-            }
-            return i;
-        } else if (i == 3) {
-            System.out.println("Pikachu usou Calda de ferro");
-            if (v == true) {
-                i = 5 * 2;
-                System.out.println("- " + i + " de vida");
-            } else {
-                i = 5;
-                System.out.println("- " + i + " de vida");
-            }
-            return i;
-        } else if (i == 4) {
-            System.out.println("Pikachu usou Bola Relampago");
-            if (v == true) {
-                i = 10 * 2;
-                System.out.println("- " + i + " de vida");
-            } else {
-                i = 10;
-                System.out.println("- " + i + " de vida");
-            }
-            return i;
-        } else if (i < 1 && i > 4) {
-            System.err.println("Nada acontece");
+    public int ataque(int tipoAtaque, boolean temVantagem) {
+        int dano;
+        switch (tipoAtaque) {
+            case 1:
+                System.out.println("Pikachu usou Choque do trovão");
+                dano = temVantagem ? 2 : 1;
+                break;
+            case 2:
+                System.out.println("Pikachu usou Ataque rápido");
+                dano = temVantagem ? 6 : 3;
+                break;
+            case 3:
+                System.out.println("Pikachu usou Cauda de ferro");
+                dano = temVantagem ? 10 : 5;
+                break;
+            case 4:
+                System.out.println("Pikachu usou Bola Relâmpago");
+                dano = temVantagem ? 20 : 10;
+                break;
+            default:
+                throw new IllegalArgumentException("Ataque inválido!");
         }
-        return i;
-
+        System.out.println("- " + dano + " de vida");
+        return dano;
     }
 }
