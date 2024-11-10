@@ -15,7 +15,7 @@ public class BatalhaPokemon {
             if (!checarVidaPokemon(p2, posicaoPokemonAdversario)) {
                 continuarBatalha = pokemonDerrotado(p1.getListaPokemons(posicaoPokemonJogador),
                         p2.getListaPokemons(posicaoPokemonAdversario));
-                posicaoPokemonAdversario = mudarPokemon(p2, posicaoPokemonAdversario);
+                posicaoPokemonAdversario = mudarPokemon(p1, p2, posicaoPokemonAdversario);
             } else {
                 oponenteAtaca(p1.getListaPokemons(posicaoPokemonJogador),
                         p2.getListaPokemons(posicaoPokemonAdversario));
@@ -43,9 +43,46 @@ public class BatalhaPokemon {
         System.out.println("Você fugiu da batalha!");
     }
 
-    private static void usarItem(Treinador p1) {
-        System.out.println(p1.getNome() + " usou um item!");
-        // Implementar lógica de uso de item
+    private static void usarItem(Treinador p1, Scanner scanner) {
+        System.out.println("Qual item você deseja usar?");
+        System.out.println("1 - Poção Pequena: +5 de vida");
+        System.out.println("2 - Poção Grande: +10 de vida");
+
+        int nItem = 0, itemEscolhido = 0;
+        nItem = scanner.nextInt();
+
+        while (nItem < 1 || nItem > 2) {
+            System.out.println("Opção inválida. Tente novamente:");
+            nItem = scanner.nextInt();
+        }
+
+        switch (nItem) {
+            case 1:
+                itemEscolhido = 5;
+                break;
+            case 2:
+                itemEscolhido = 10;
+                break;
+        }
+
+        System.out.println("Em qual Pokémon quer usar o item?");
+
+        for (int i = 0; i < p1.getListaPokemons().length; i++) {
+            if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() > 0) {
+                System.out.println(
+                        i + " - " + p1.getListaPokemons()[i].getNome() + " - " + p1.getListaPokemons()[i].getVida());
+            }
+        }
+
+        nItem = scanner.nextInt();
+        while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() <= 0) {
+            System.out.println("Escolha inválida. Tente novamente:");
+            nItem = scanner.nextInt();
+        }
+
+        System.out.println(p1.getNome() + " usou um item no " + p1.getListaPokemons(nItem).getNome());
+        System.out.println(p1.getListaPokemons(nItem).getNome() + " ganhou " + itemEscolhido + " de vida");
+        p1.getListaPokemons(nItem).setVida(p1.getListaPokemons(nItem).getVida() + itemEscolhido);
     }
 
     private static int mudarPokemonJogador(Treinador p1, int posicaoAtual, Scanner scanner) {
@@ -70,13 +107,14 @@ public class BatalhaPokemon {
         return novaPosicao;
     }
 
-    private static int mudarPokemon(Treinador p2, int posicaoAtual) {
+    private static int mudarPokemon(Treinador p1, Treinador p2, int posicaoAtual) {
         for (int i = 0; i < p2.getListaPokemons().length; i++) {
             if (p2.getListaPokemons(i) != null && p2.getListaPokemons(i).getVida() > 0) {
                 return i;
             }
         }
-        System.out.println("O treinador não possui mais Pokémons com vida.");
+        System.out.println("O treinador " + p2.getNome() + " não possui mais Pokémons com vida.");
+        System.out.println("O treinador " + p1.getNome() + " ganhou a batalha.");
         return posicaoAtual; // Alternativamente, encerre a batalha.
     }
 
@@ -131,7 +169,7 @@ public class BatalhaPokemon {
                 posicaoPokemonJogador = mudarPokemonJogador(p1, posicaoPokemonJogador, scanner);
                 break;
             case 3:
-                usarItem(p1);
+                usarItem(p1, scanner);
                 break;
             case 4:
                 fugir();
