@@ -31,7 +31,6 @@ public class Treinador {
     public Pokemon[] getListaPokemons() {
         return listaPokemons;
     }
-    
 
     public Pokemon getListaPokemons(int posicao) {
         if (posicao >= 0 && posicao < listaPokemons.length) {
@@ -41,7 +40,6 @@ public class Treinador {
             return null;
         }
     }
-    
 
     public void setListaPokemons(Pokemon[] listaPokemons) {
         this.listaPokemons = listaPokemons;

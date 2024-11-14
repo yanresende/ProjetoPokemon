@@ -47,11 +47,12 @@ public class BatalhaPokemon {
         System.out.println("Qual item você deseja usar?");
         System.out.println("1 - Poção Pequena: +5 de vida");
         System.out.println("2 - Poção Grande: +10 de vida");
+        System.out.println("3 - Reviver: Revive o Pokemon com 30 de vida");
 
         int nItem = 0, itemEscolhido = 0;
         nItem = scanner.nextInt();
 
-        while (nItem < 1 || nItem > 2) {
+        while (nItem < 1 || nItem > 3) {
             System.out.println("Opção inválida. Tente novamente:");
             nItem = scanner.nextInt();
         }
@@ -63,21 +64,38 @@ public class BatalhaPokemon {
             case 2:
                 itemEscolhido = 10;
                 break;
+            case 3:
+                itemEscolhido = 30;
         }
 
         System.out.println("Em qual Pokémon quer usar o item?");
-
-        for (int i = 0; i < p1.getListaPokemons().length; i++) {
-            if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() > 0) {
-                System.out.println(
-                        i + " - " + p1.getListaPokemons()[i].getNome() + " - " + p1.getListaPokemons()[i].getVida());
+        if (itemEscolhido == 1 || itemEscolhido == 2) {
+            for (int i = 0; i < p1.getListaPokemons().length; i++) {
+                if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() > 0) {
+                    System.out.println(
+                            i + " - " + p1.getListaPokemons()[i].getNome() + " - "
+                                    + p1.getListaPokemons()[i].getVida());
+                }
             }
-        }
 
-        nItem = scanner.nextInt();
-        while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() <= 0) {
-            System.out.println("Escolha inválida. Tente novamente:");
             nItem = scanner.nextInt();
+            while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() <= 0) {
+                System.out.println("Escolha inválida. Tente novamente:");
+                nItem = scanner.nextInt();
+            }
+        } else {
+            for (int i = 0; i < p1.getListaPokemons().length; i++) {
+                if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() <= 0) {
+                    System.out.println(
+                            i + " - " + p1.getListaPokemons()[i].getNome());
+                }
+            }
+
+            nItem = scanner.nextInt();
+            while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() > 0) {
+                System.out.println("Escolha inválida. Tente novamente:");
+                nItem = scanner.nextInt();
+            }
         }
 
         System.out.println(p1.getNome() + " usou um item no " + p1.getListaPokemons(nItem).getNome());
