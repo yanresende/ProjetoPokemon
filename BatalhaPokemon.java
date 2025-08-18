@@ -3,47 +3,199 @@ import java.util.Scanner;
 
 public class BatalhaPokemon {
 
-    public static void batalhar(Treinador p1, Treinador p2) {
-        Scanner scanner = new Scanner(System.in);
-        boolean continuarBatalha = true;
-        int posicaoPokemonJogador = 0, posicaoPokemonAdversario = 0;
+    private Treinador jogador;
+    private Pokemon pokemonAtualJogador;
+    private Treinador adversario;
+    private Pokemon pokemonAtualAdversario;
+    private Scanner scanner;
+    private int posicaoPokemonJogador;
+    private int posicaoPokemonAdversario;
 
-        while (continuarBatalha) {
-            int codigoAcao = obterAcaoDoJogador(scanner, p1);
-            processarAcao(p1, p2, codigoAcao, posicaoPokemonJogador, posicaoPokemonAdversario, scanner);
+    public BatalhaPokemon(Treinador j1, Treinador j2, Scanner sc) {
+        this.jogador = j1;
+        this.adversario = j2;
+        this.scanner = sc;
+        this.posicaoPokemonJogador = 0;
+        this.posicaoPokemonAdversario = 0;
+        this.pokemonAtualJogador = this.jogador.getListaPokemons(this.posicaoPokemonJogador);
+        this.pokemonAtualAdversario = this.adversario.getListaPokemons(this.posicaoPokemonAdversario);
+    }
 
-            if (!checarVidaPokemon(p2, posicaoPokemonAdversario)) {
-                continuarBatalha = pokemonDerrotado(p1.getListaPokemons(posicaoPokemonJogador),
-                        p2.getListaPokemons(posicaoPokemonAdversario));
-                posicaoPokemonAdversario = mudarPokemon(p1, p2, posicaoPokemonAdversario);
-            } else {
-                oponenteAtaca(p1.getListaPokemons(posicaoPokemonJogador),
-                        p2.getListaPokemons(posicaoPokemonAdversario));
+    public void iniciar() {
+        System.out.println("Batalha iniciada entre " + jogador.getNome() + " e " + adversario.getNome());
+        System.out.println("----------------------------------------------------------");
+        System.out.println(
+                jogador.getNome() + " escolheu: " + jogador.getListaPokemons(posicaoPokemonJogador).getNome());
+        System.out.println(
+                adversario.getNome() + " escolheu: " + adversario.getListaPokemons(posicaoPokemonAdversario).getNome());
+        System.out.println("----------------------------------------------------------");
+
+        while (true) {
+
+            // --- TURNO DO JOGADOR ---
+            turnoDoJogador();
+
+            if (this.pokemonAtualAdversario.getVida() <= 0) {
+                processarPokemonDerrotado(this.pokemonAtualAdversario, this.pokemonAtualJogador);
+
+                // 2. Se foi derrotado, o treinador adversário ainda tem outros para lutar?
+                if (!adversarioAindaTemPokemons()) {
+                    break; // Não, a batalha acabou.
+                } else {
+                    mudarPokemonAdversario(); // Sim, então ele é forçado a trocar.
+                }
+            }
+
+            // --- TURNO DO ADVERSÁRIO ---
+            turnoDoAdversario();
+
+            if (this.pokemonAtualJogador.getVida() <= 0) {
+                processarPokemonDerrotado(this.pokemonAtualJogador, this.pokemonAtualAdversario);
+
+                // 2. Se foi derrotado, você ainda tem outros para lutar?
+                if (!jogadorAindaTemPokemons()) {
+                    break; // Não, a batalha acabou.
+                } else {
+                    System.out.println("Você precisa trocar seu Pokémon!");
+                    mudarPokemonJogador(); // Sim, então você é forçado a trocar.
+                }
             }
         }
-        scanner.close();
+
+        // Anunciar vencedor
+        if (jogadorAindaTemPokemons()) {
+            System.out.println(jogador.getNome() + " venceu a batalha!");
+        } else if (adversarioAindaTemPokemons()) {
+            System.out.println(adversario.getNome() + " venceu a batalha!");
+        } else {
+            System.out.println("A batalha terminou em empate!");
+        }
     }
 
-    private static int obterAcaoDoJogador(Scanner scanner, Treinador p1) {
-        int codigoAcao = 0;
-        while (codigoAcao < 1 || codigoAcao > 5) {
-            System.out.println("Escolha o que " + p1.getNome() + " irá fazer: ");
+    // Turno do jogador
+    private void turnoDoJogador() {
+        System.out.println("\n--- Vez de " + this.jogador.getNome() + " ---");
+        Acao acaoEscolhida = obterAcaoDoJogador();
+        processarAcao(acaoEscolhida);
+    }
+
+    // Turno do adversário
+    private void turnoDoAdversario() {
+        System.out.println("\n--- Vez de " + this.adversario.getNome() + " ---");
+        // IA Simples: sempre atacar
+        oponenteAtaca();
+    }
+
+    // Obtém a ação do jogador
+    private Acao obterAcaoDoJogador() {
+        int escolha;
+        while (true) { // Loop infinito que será quebrado por um 'return'
+            System.out.println("Escolha o que " + jogador.getNome() + " irá fazer: ");
             System.out.println("1 = Atacar / 2 = Mudar Pokemon / 3 = Usar item / 4 = Fugir");
             System.out.println("----------------------------------------------------------");
-            codigoAcao = scanner.nextInt();
+            escolha = this.scanner.nextInt();
+
+            if (escolha >= 1 && escolha <= 4) {
+                switch (escolha) {
+                    case 1:
+                        return Acao.ATACAR;
+                    case 2:
+                        return Acao.MUDAR_POKEMON;
+                    case 3:
+                        return Acao.USAR_ITEM;
+                    case 4:
+                        return Acao.FUGIR;
+                }
+            }
+
+            System.out.println("Opção inválida. Tente novamente.");
         }
-        return codigoAcao;
     }
 
-    private static boolean checarVidaPokemon(Treinador treinador, int posicaoPokemon) {
-        return treinador.getListaPokemons(posicaoPokemon).getVida() > 0;
+    // Ataque do jogador
+    private void ataqueJogador() {
+        System.out.println("Escolha o código do ataque de " + jogador.getNome() + ": ");
+        int codigoAtaque = scanner.nextInt();
+        System.out.println("----------------------------------------------------------");
+        pokemonAtualAdversario.setVida(pokemonAtualAdversario.getVida() - pokemonAtualJogador.ataque(codigoAtaque,
+                critico(pokemonAtualJogador.getVantagem(), pokemonAtualJogador.getTipo(),
+                        pokemonAtualAdversario.getTipo())));
     }
 
-    private static void fugir() {
+    // Ataque oponente
+    private void oponenteAtaca() {
+        Random random = new Random();
+        int codigoAtaque = random.nextInt(4) + 1;
+        pokemonAtualJogador.setVida(pokemonAtualJogador.getVida() - pokemonAtualAdversario.ataque(codigoAtaque,
+                critico(pokemonAtualAdversario.getVantagem(), pokemonAtualAdversario.getTipo(),
+                        pokemonAtualJogador.getTipo())));
+    }
+
+    // Verifica fraqueza
+    private boolean critico(String tipos, String tipoAtacante, String fraqueza) {
+        String[] vantagem = tipos.split("-");
+        for (String tipo : vantagem) {
+            if (tipo.equals(fraqueza)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void processarAcao(Acao acaoEscolhida) {
+        switch (acaoEscolhida) {
+            case ATACAR:
+                ataqueJogador();
+                break;
+            case MUDAR_POKEMON:
+                mudarPokemonJogador();
+                break;
+            case USAR_ITEM:
+                usarItem();
+                break;
+            case FUGIR:
+                fugir();
+                break;
+            case INVALIDA:
+                System.out.println("Ação inválida! Tente novamente.");
+                break;
+        }
+    }
+
+    // NOVO MÉTODO PARA PROCESSAR O RESULTADO
+    private void processarPokemonDerrotado(Pokemon derrotado, Pokemon vencedor) {
+        System.out.println("----------------------------------------------------------");
+        System.out.println(derrotado.getNome() + " foi derrotado!");
+        System.out.println(vencedor.getNome() + " ganhou 10 xp!");
+        vencedor.setNivel(vencedor.getNivel() + 10);
+        System.out.println("----------------------------------------------------------");
+    }
+
+    private boolean jogadorAindaTemPokemons() {
+        for (Pokemon pokemon : jogador.getListaPokemons()) {
+            if (pokemon != null && pokemon.getVida() > 0) {
+                return true;
+            }
+        }
+        System.out.println(jogador.getNome() + " não possui mais Pokémons com vida.");
+        return false;
+    }
+
+    private boolean adversarioAindaTemPokemons() {
+        for (Pokemon pokemon : adversario.getListaPokemons()) {
+            if (pokemon != null && pokemon.getVida() > 0) {
+                return true;
+            }
+        }
+        System.out.println(adversario.getNome() + " não possui mais Pokémons com vida.");
+        return false;
+    }
+
+    private void fugir() {
         System.out.println("Você fugiu da batalha!");
     }
 
-    private static void usarItem(Treinador p1, Scanner scanner) {
+    private void usarItem() {
         System.out.println("Qual item você deseja usar?");
         System.out.println("1 - Poção Pequena: +5 de vida");
         System.out.println("2 - Poção Grande: +10 de vida");
@@ -70,130 +222,84 @@ public class BatalhaPokemon {
 
         System.out.println("Em qual Pokémon quer usar o item?");
         if (itemEscolhido == 1 || itemEscolhido == 2) {
-            for (int i = 0; i < p1.getListaPokemons().length; i++) {
-                if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() > 0) {
+            for (int i = 0; i < jogador.getListaPokemons().length; i++) {
+                if (jogador.getListaPokemons()[i] != null && jogador.getListaPokemons()[i].getVida() > 0) {
                     System.out.println(
-                            i + " - " + p1.getListaPokemons()[i].getNome() + " - "
-                                    + p1.getListaPokemons()[i].getVida());
+                            i + " - " + jogador.getListaPokemons()[i].getNome() + " - "
+                                    + jogador.getListaPokemons()[i].getVida());
                 }
             }
 
             nItem = scanner.nextInt();
-            while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() <= 0) {
+            while (nItem < 0 || nItem >= jogador.getListaPokemons().length
+                    || jogador.getListaPokemons(nItem).getVida() <= 0) {
                 System.out.println("Escolha inválida. Tente novamente:");
                 nItem = scanner.nextInt();
             }
         } else {
-            for (int i = 0; i < p1.getListaPokemons().length; i++) {
-                if (p1.getListaPokemons()[i] != null && p1.getListaPokemons()[i].getVida() <= 0) {
+            for (int i = 0; i < jogador.getListaPokemons().length; i++) {
+                if (jogador.getListaPokemons()[i] != null && jogador.getListaPokemons()[i].getVida() <= 0) {
                     System.out.println(
-                            i + " - " + p1.getListaPokemons()[i].getNome());
+                            i + " - " + jogador.getListaPokemons()[i].getNome());
                 }
             }
 
             nItem = scanner.nextInt();
-            while (nItem < 0 || nItem >= p1.getListaPokemons().length || p1.getListaPokemons(nItem).getVida() > 0) {
+            while (nItem < 0 || nItem >= jogador.getListaPokemons().length
+                    || jogador.getListaPokemons(nItem).getVida() > 0) {
                 System.out.println("Escolha inválida. Tente novamente:");
                 nItem = scanner.nextInt();
             }
         }
 
-        System.out.println(p1.getNome() + " usou um item no " + p1.getListaPokemons(nItem).getNome());
-        System.out.println(p1.getListaPokemons(nItem).getNome() + " ganhou " + itemEscolhido + " de vida");
-        p1.getListaPokemons(nItem).setVida(p1.getListaPokemons(nItem).getVida() + itemEscolhido);
+        System.out.println(jogador.getNome() + " usou um item no " + jogador.getListaPokemons(nItem).getNome());
+        System.out.println(jogador.getListaPokemons(nItem).getNome() + " ganhou " + itemEscolhido + " de vida");
+        jogador.getListaPokemons(nItem).setVida(jogador.getListaPokemons(nItem).getVida() + itemEscolhido);
     }
 
-    private static int mudarPokemonJogador(Treinador p1, int posicaoAtual, Scanner scanner) {
+    private void mudarPokemonJogador() {
         int novaPosicao;
         System.out.println("Por qual Pokémon deseja trocar: ");
-        for (int i = 0; i < p1.getListaPokemons().length; i++) {
-            if (p1.getListaPokemons(i) != null) {
-                System.out.println(i + " - " + p1.getListaPokemons(i).getNome());
+        for (int i = 0; i < jogador.getListaPokemons().length; i++) {
+            if (jogador.getListaPokemons(i) != null) {
+                System.out.println(i + " - " + jogador.getListaPokemons(i).getNome());
             }
         }
 
         do {
             System.out.print("Digite o número do Pokémon escolhido: ");
             novaPosicao = scanner.nextInt();
-            if (novaPosicao < 0 || novaPosicao >= p1.getListaPokemons().length || novaPosicao == posicaoAtual
-                    || p1.getListaPokemons(novaPosicao).getVida() <= 0) {
+            if (novaPosicao < 0 || novaPosicao >= jogador.getListaPokemons().length
+                    || novaPosicao == posicaoPokemonJogador
+                    || jogador.getListaPokemons(novaPosicao).getVida() <= 0) {
                 System.out.println("Posição inválida!");
             }
-        } while (novaPosicao < 0 || novaPosicao >= p1.getListaPokemons().length || novaPosicao == posicaoAtual
-                || p1.getListaPokemons(novaPosicao).getVida() <= 0);
+        } while (novaPosicao < 0 || novaPosicao >= jogador.getListaPokemons().length
+                || novaPosicao == posicaoPokemonJogador
+                || jogador.getListaPokemons(novaPosicao).getVida() <= 0);
 
-        return novaPosicao;
+        posicaoPokemonJogador = novaPosicao;
+        this.pokemonAtualJogador = this.jogador.getListaPokemons(this.posicaoPokemonJogador);
+        System.out.println(this.jogador.getNome() + " trocou para " + this.pokemonAtualJogador.getNome() + "!");
     }
 
-    private static int mudarPokemon(Treinador p1, Treinador p2, int posicaoAtual) {
-        for (int i = 0; i < p2.getListaPokemons().length; i++) {
-            if (p2.getListaPokemons(i) != null && p2.getListaPokemons(i).getVida() > 0) {
-                return i;
+    // Muda o Pokémon do adversário
+    private void mudarPokemonAdversario() {
+
+        for (int i = 0; i < adversario.getListaPokemons().length; i++) {
+            if (adversario.getListaPokemons(i) != null && adversario.getListaPokemons(i).getVida() > 0) {
+
+                // 1. ATUALIZA A POSIÇÃO
+                posicaoPokemonAdversario = i;
+
+                // 2. ATUALIZA A REFERÊNCIA DO POKÉMON ATUAL
+                pokemonAtualAdversario = adversario.getListaPokemons(i);
+
+                System.out.println(
+                        adversario.getNome() + " trocou para " + pokemonAtualAdversario.getNome() + "!");
+                return; // Sai do método assim que a troca for feita
             }
         }
-        System.out.println("O treinador " + p2.getNome() + " não possui mais Pokémons com vida.");
-        System.out.println("O treinador " + p1.getNome() + " ganhou a batalha.");
-        return posicaoAtual; // Alternativamente, encerre a batalha.
     }
 
-    private static void oponenteAtaca(Pokemon p1, Pokemon p2) {
-        Random random = new Random();
-        int codigoAtaque = random.nextInt(4) + 1;
-        p1.setVida(p1.getVida() - p2.ataque(codigoAtaque, critico(p2.getVantagem(), p2.getTipo(), p1.getTipo())));
-    }
-
-    private static boolean pokemonDerrotado(Pokemon p1, Pokemon p2) {
-        if (p1.getVida() <= 0) {
-            System.out.println("----------------------------------------------------------");
-            System.out.println(p1.getNome() + " foi derrotado");
-            System.out.println(p2.getNome() + " ganhou 10 xp");
-            p2.setNivel(p2.getNivel() + 10);
-            System.out.println("----------------------------------------------------------");
-        } else if (p2.getVida() <= 0) {
-            System.out.println("----------------------------------------------------------");
-            System.out.println(p2.getNome() + " foi derrotado");
-            System.out.println(p1.getNome() + " ganhou 10 xp");
-            p1.setNivel(p1.getNivel() + 10);
-            System.out.println("----------------------------------------------------------");
-        }
-        return false;
-    }
-
-    private static void ataqueJogador(Pokemon p1, Pokemon p2, Scanner scanner) {
-        System.out.println("Escolha o código do ataque de " + p1.getNome() + ": ");
-        int codigoAtaque = scanner.nextInt();
-        System.out.println("----------------------------------------------------------");
-        p2.setVida(p2.getVida() - p1.ataque(codigoAtaque, critico(p1.getVantagem(), p1.getTipo(), p2.getTipo())));
-    }
-
-    private static boolean critico(String tipos, String tipoAtacante, String fraqueza) {
-        String[] vantagem = tipos.split("-");
-        for (String tipo : vantagem) {
-            if (tipo.equals(fraqueza)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static void processarAcao(Treinador p1, Treinador p2, int codigoAcao, int posicaoPokemonJogador,
-            int posicaoPokemonAdversario, Scanner scanner) {
-        switch (codigoAcao) {
-            case 1:
-                ataqueJogador(p1.getListaPokemons(posicaoPokemonJogador), p2.getListaPokemons(posicaoPokemonAdversario),
-                        scanner);
-                break;
-            case 2:
-                posicaoPokemonJogador = mudarPokemonJogador(p1, posicaoPokemonJogador, scanner);
-                break;
-            case 3:
-                usarItem(p1, scanner);
-                break;
-            case 4:
-                fugir();
-                break;
-            default:
-                System.out.println("Ação inválida! Escolha novamente.");
-        }
-    }
 }
