@@ -1,14 +1,15 @@
-public class Blastoise extends Pokemon {
-    public Blastoise() {
-        super();
-        this.setNome("Blastoise");
+package pokemons;
+
+public class Venonate extends Pokemon {
+    public Venonate() {
+        this.setNome("Venonate");
         this.setVida(20);
         this.setNivel(1);
-        this.setTipo("Agua");
-        this.setVantagem("Terra-Pedra-Fogo");
+        this.setTipo("Venenoso");
+        this.setVantagem("Planta-Fada");
     }
 
-    public Blastoise(int vida, int nivel, String treinador) {
+    public Venonate(int vida, int nivel, String treinador) {
         this();
         this.setVida(vida);
         this.setNivel(nivel);
@@ -20,19 +21,19 @@ public class Blastoise extends Pokemon {
         int dano;
         switch (tipoAtaque) {
             case 1:
-                System.out.println("Blastoise usou Derrubada");
+                System.out.println("Venonate usou Fly");
                 dano = temVantagem ? 2 : 1;
                 break;
             case 2:
-                System.out.println("Blastoise usou Jato de Agua");
+                System.out.println("Venonate usou Bite");
                 dano = temVantagem ? 6 : 3;
                 break;
             case 3:
-                System.out.println("Blastoise usou Investida");
+                System.out.println("Venonate usou Fire Ball");
                 dano = temVantagem ? 10 : 5;
                 break;
             case 4:
-                System.out.println("Blastoise usou Canhão de Agua");
+                System.out.println("Venonate usou Flame Tower");
                 dano = temVantagem ? 20 : 10;
                 break;
             default:

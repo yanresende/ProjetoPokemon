@@ -1,5 +1,10 @@
+package batalha;
 import java.util.Random;
 import java.util.Scanner;
+
+import pokemons.Pokemon;
+import modelo.Acao;
+import modelo.Treinador;
 
 public class BatalhaPokemon {
 

@@ -1,17 +1,22 @@
-public class Charizard extends Pokemon {
-    public Charizard() {
-        this.setNome("Charizard");
+package pokemons;
+
+public class Pikachu extends Pokemon {
+
+    public Pikachu() {
+        super();
+        this.setNome("Pikachu");
         this.setVida(20);
         this.setNivel(1);
-        this.setTipo("Fogo");
-        this.setVantagem("Dragão");
+        this.setTipo("Elétrico");
+        this.setVantagem("Agua-Voador");
     }
 
-    public Charizard(int vida, int nivel, String treinador) {
+    public Pikachu(int vida, int nivel, String treinador) {
         this();
         this.setVida(vida);
         this.setNivel(nivel);
         this.setTreinador(treinador);
+
     }
 
     @Override
@@ -19,19 +24,19 @@ public class Charizard extends Pokemon {
         int dano;
         switch (tipoAtaque) {
             case 1:
-                System.out.println("Charizard usou Fly");
+                System.out.println("Pikachu usou Choque do trovão");
                 dano = temVantagem ? 2 : 1;
                 break;
             case 2:
-                System.out.println("Charizard usou Bite");
+                System.out.println("Pikachu usou Ataque rápido");
                 dano = temVantagem ? 6 : 3;
                 break;
             case 3:
-                System.out.println("Charizard usou Fire Ball");
+                System.out.println("Pikachu usou Cauda de ferro");
                 dano = temVantagem ? 10 : 5;
                 break;
             case 4:
-                System.out.println("Charizard usou Flame Tower");
+                System.out.println("Pikachu usou Bola Relâmpago");
                 dano = temVantagem ? 20 : 10;
                 break;
             default:
@@ -40,5 +45,4 @@ public class Charizard extends Pokemon {
         System.out.println("- " + dano + " de vida");
         return dano;
     }
-
 }

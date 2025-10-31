@@ -1,20 +1,19 @@
-public class Pikachu extends Pokemon {
+package pokemons;
 
-    public Pikachu() {
-        super();
-        this.setNome("Pikachu");
+public class Venossauro extends Pokemon {
+    public Venossauro() {
+        this.setNome("Venossauro");
         this.setVida(20);
         this.setNivel(1);
-        this.setTipo("Elétrico");
-        this.setVantagem("Agua-Voador");
+        this.setTipo("Planta");
+        this.setVantagem("Agua-Pedra-Terra");
     }
 
-    public Pikachu(int vida, int nivel, String treinador) {
+    public Venossauro(int vida, int nivel, String treinador) {
         this();
         this.setVida(vida);
         this.setNivel(nivel);
         this.setTreinador(treinador);
-
     }
 
     @Override
@@ -22,19 +21,19 @@ public class Pikachu extends Pokemon {
         int dano;
         switch (tipoAtaque) {
             case 1:
-                System.out.println("Pikachu usou Choque do trovão");
+                System.out.println("Venossauro usou Fly");
                 dano = temVantagem ? 2 : 1;
                 break;
             case 2:
-                System.out.println("Pikachu usou Ataque rápido");
+                System.out.println("Venossauro usou Bite");
                 dano = temVantagem ? 6 : 3;
                 break;
             case 3:
-                System.out.println("Pikachu usou Cauda de ferro");
+                System.out.println("Venossauro usou Fire Ball");
                 dano = temVantagem ? 10 : 5;
                 break;
             case 4:
-                System.out.println("Pikachu usou Bola Relâmpago");
+                System.out.println("Venossauro usou Flame Tower");
                 dano = temVantagem ? 20 : 10;
                 break;
             default:
@@ -43,4 +42,5 @@ public class Pikachu extends Pokemon {
         System.out.println("- " + dano + " de vida");
         return dano;
     }
+
 }

@@ -1,13 +1,16 @@
-public class Venossauro extends Pokemon {
-    public Venossauro() {
-        this.setNome("Venossauro");
+package pokemons;
+
+public class Blastoise extends Pokemon {
+    public Blastoise() {
+        super();
+        this.setNome("Blastoise");
         this.setVida(20);
         this.setNivel(1);
-        this.setTipo("Planta");
-        this.setVantagem("Agua-Pedra-Terra");
+        this.setTipo("Agua");
+        this.setVantagem("Terra-Pedra-Fogo");
     }
 
-    public Venossauro(int vida, int nivel, String treinador) {
+    public Blastoise(int vida, int nivel, String treinador) {
         this();
         this.setVida(vida);
         this.setNivel(nivel);
@@ -19,19 +22,19 @@ public class Venossauro extends Pokemon {
         int dano;
         switch (tipoAtaque) {
             case 1:
-                System.out.println("Venossauro usou Fly");
+                System.out.println("Blastoise usou Derrubada");
                 dano = temVantagem ? 2 : 1;
                 break;
             case 2:
-                System.out.println("Venossauro usou Bite");
+                System.out.println("Blastoise usou Jato de Agua");
                 dano = temVantagem ? 6 : 3;
                 break;
             case 3:
-                System.out.println("Venossauro usou Fire Ball");
+                System.out.println("Blastoise usou Investida");
                 dano = temVantagem ? 10 : 5;
                 break;
             case 4:
-                System.out.println("Venossauro usou Flame Tower");
+                System.out.println("Blastoise usou Canhão de Agua");
                 dano = temVantagem ? 20 : 10;
                 break;
             default:

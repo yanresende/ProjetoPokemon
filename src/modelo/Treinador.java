@@ -1,3 +1,7 @@
+package modelo;
+
+import pokemons.Pokemon;
+
 public class Treinador {
 
     private String nome;

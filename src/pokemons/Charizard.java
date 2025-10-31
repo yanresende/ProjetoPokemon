@@ -1,13 +1,15 @@
-public class Venonate extends Pokemon {
-    public Venonate() {
-        this.setNome("Venonate");
+package pokemons;
+
+public class Charizard extends Pokemon {
+    public Charizard() {
+        this.setNome("Charizard");
         this.setVida(20);
         this.setNivel(1);
-        this.setTipo("Venenoso");
-        this.setVantagem("Planta-Fada");
+        this.setTipo("Fogo");
+        this.setVantagem("Dragão");
     }
 
-    public Venonate(int vida, int nivel, String treinador) {
+    public Charizard(int vida, int nivel, String treinador) {
         this();
         this.setVida(vida);
         this.setNivel(nivel);
@@ -19,19 +21,19 @@ public class Venonate extends Pokemon {
         int dano;
         switch (tipoAtaque) {
             case 1:
-                System.out.println("Venonate usou Fly");
+                System.out.println("Charizard usou Fly");
                 dano = temVantagem ? 2 : 1;
                 break;
             case 2:
-                System.out.println("Venonate usou Bite");
+                System.out.println("Charizard usou Bite");
                 dano = temVantagem ? 6 : 3;
                 break;
             case 3:
-                System.out.println("Venonate usou Fire Ball");
+                System.out.println("Charizard usou Fire Ball");
                 dano = temVantagem ? 10 : 5;
                 break;
             case 4:
-                System.out.println("Venonate usou Flame Tower");
+                System.out.println("Charizard usou Flame Tower");
                 dano = temVantagem ? 20 : 10;
                 break;
             default:
